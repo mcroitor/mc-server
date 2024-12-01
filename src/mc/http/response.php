@@ -1,8 +1,8 @@
 <?php
 
-namespace mc;
+namespace mc\http;
 
-class HttpResponse {
+class Response {
     public const HEADER_CONTENT_TYPE = 'Content-Type';
     public const HEADER_CONTENT_LENGTH = 'Content-Length';
     public const HEADER_CONNECTION = 'Connection';
@@ -15,7 +15,7 @@ class HttpResponse {
         self::HEADER_CONTENT_LENGTH => 0,
     ];
     private $body = '';
-    private $status = \mc\HttpStatus::OK;
+    private $status = \mc\Http\Status::OK;
 
     public function __construct($body = '') {
         $this->body = $body;
@@ -49,10 +49,14 @@ class HttpResponse {
 
     public function __toString() {
         $header = "HTTP/1.1 {$this->status} " .
-            \mc\HttpStatus::getMessage($this->status) . "\r\n";
+            \mc\Http\Status::getMessage($this->status) . "\r\n";
         foreach ($this->header as $key => $value) {
             $header .= "$key: $value\r\n";
         }
         return "$header\r\n$this->body";
+    }
+
+    public function ToString() {
+        return $this->__toString();
     }
 }

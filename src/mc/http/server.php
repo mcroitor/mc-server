@@ -1,15 +1,15 @@
 <?php
 
-namespace mc;
+namespace mc\http;
 
 class Server {
     public const HOST = 'host';
     public const PORT = 'port';
-    public const HANDLER = 'handler';
+    public const HANDLE = 'handle';
     private $config = [
         self::HOST => 'localhost',
         self::PORT => 8080,
-        self::HANDLER => null
+        self::HANDLE => null
     ];
     private $socket;
 
@@ -27,8 +27,8 @@ class Server {
         return $this->config;
     }
 
-    public function SetHandler($handler) {
-        $this->config[self::HANDLER] = $handler;
+    public function SetHandle($handler) {
+        $this->config[self::HANDLE] = $handler;
     }
 
     public function run() {
@@ -37,7 +37,7 @@ class Server {
         while (true) {
             $client = \socket_accept($this->socket);
             $request = \socket_read($client, 1024);
-            $response = $this->config[self::HANDLER]($request);
+            $response = $this->config[self::HANDLE]($request);
             \socket_write($client, $response);
             \socket_close($client);
         }

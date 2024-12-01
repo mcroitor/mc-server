@@ -1,8 +1,13 @@
 <?php
 
-namespace mc;
+namespace mc\http;
 
-class HttpRequest {
+class Request {
+    public const METHOD_GET = 'GET';
+    public const METHOD_POST = 'POST';
+    public const METHOD_PUT = 'PUT';
+    public const METHOD_DELETE = 'DELETE';
+
     public const HEADER_HOST = 'Host';
     public const HEADER_CONTENT_TYPE = 'Content-Type';
     public const HEADER_CONTENT_LENGTH = 'Content-Length';
@@ -20,10 +25,10 @@ class HttpRequest {
     private $body = '';
 
     public function __construct($request) {
-        $this->parse($request);
+        $this->Parse($request);
     }
 
-    private function parse($request) {
+    private function Parse($request) {
         // first line contains method and path
         $lines = \explode("\r\n", $request);
         $firstLine = $lines[0];
@@ -35,10 +40,10 @@ class HttpRequest {
         $header = $parts[0];
         $this->body = $parts[1] ?? '';
         $lines = \explode("\r\n", $header);
-        $this->parseHeader($lines);
+        $this->ParseHeader($lines);
     }
 
-    private function parseHeader($lines) {
+    private function ParseHeader($lines) {
         $this->header = [];
         foreach ($lines as $line) {
             $parts = \explode(': ', $line);
@@ -48,19 +53,19 @@ class HttpRequest {
         }
     }
 
-    public function getHeader($key) {
+    public function GetHeader($key) {
         return $this->header[$key] ?? null;
     }
 
-    public function getBody() {
+    public function GetBody() {
         return $this->body;
     }
 
-    public function getMethod() {
+    public function GetMethod() {
         return $this->method;
     }
 
-    public function getPath() {
+    public function GetPath() {
         return $this->path;
     }
 }

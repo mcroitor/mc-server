@@ -1,38 +1,41 @@
 <?php
 
-include __DIR__ . '/../src/mc/httpstatus.php';
-include __DIR__ . '/../src/mc/httprequest.php';
-include __DIR__ . '/../src/mc/httpresponse.php';
-include __DIR__ . '/../src/mc/server.php';
+include __DIR__ . '/../src/mc/http/status.php';
+include __DIR__ . '/../src/mc/http/request.php';
+include __DIR__ . '/../src/mc/http/response.php';
+include __DIR__ . '/../src/mc/http/server.php';
 
-use mc\Server;
+use mc\http\Server;
+use mc\http\Status;
+use mc\http\Request;
+use mc\http\Response;
 
 $server = new Server([
     Server::HOST => 'localhost',
     Server::PORT => 8080,
 ]);
 
-$server->SetHandler(
+$server->SetHandle(
     function ($request) {
-        $httpRequest = new mc\HttpRequest($request);
+        $httpRequest = new Request($request);
         echo "accessed: " .
-            $httpRequest->getHeader(mc\HttpRequest::HEADER_HOST) .
-            $httpRequest->getPath() . PHP_EOL;
-        $path = $httpRequest->getPath();
+            $httpRequest->GetHeader(Request::HEADER_HOST) .
+            $httpRequest->GetPath() . PHP_EOL;
+        $path = $httpRequest->GetPath();
         if ($path === '/') {
             $path = '/index.html';
         }
         $path = __DIR__ . "/site/{$path}";
         echo "path: $path" . PHP_EOL;
         if (!file_exists($path)) {
-            $result = new mc\HttpResponse('Not Found');
-            $result->setStatus(mc\HttpStatus::NOT_FOUND);
-            return $result->__toString();
+            $result = new Response('Not Found');
+            $result->SetStatus(Status::NOT_FOUND);
+            return $result->ToString();
         }
         $page = file_get_contents($path);
 
-        $httpResponse = new \mc\HttpResponse($page);
-        return $httpResponse->__toString();
+        $httpResponse = new Response($page);
+        return $httpResponse->ToString();
     }
 );
 

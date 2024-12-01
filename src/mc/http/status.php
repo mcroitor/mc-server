@@ -1,13 +1,14 @@
 <?php
 
-namespace mc;
+namespace mc\http;
 
-class HttpStatus
+class Status
 {
     //informational
     const OK = 200;
     const CREATED = 201;
     const ACCEPTED = 202;
+    const NO_CONTENT = 204;
 
     //redirection
     const MOVED_PERMANENTLY = 301;
